@@ -3,13 +3,18 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from typing import Callable
+from typing import Sequence
 
 from bqskit.compiler.basepass import BasePass
 from bqskit.ir.circuit import Circuit
+from bqskit.ir.gate import Gate
 from bqskit.ir.gates import CircuitGate
 from bqskit.ir.gates import ConstantUnitaryGate
 from bqskit.ir.gates import VariableUnitaryGate
+from bqskit.ir.operation import Operation
 from bqskit.ir.point import CircuitPoint
+from bqskit.qis.unitary.unitary import RealVector
 
 _logger = logging.getLogger(__name__)
 
@@ -55,60 +60,61 @@ class BlockConversionPass(BasePass):
                 in convert_target. The subcircuit information captured
                 in the circuit gate will be lost.
         """
-        self.convert_variable = convert_variable
-        self.convert_constant = convert_constant
-        self.convert_circuitgates = convert_circuitgates
+
+        self.convert_origin_class_list: Sequence[type[Gate]] = []
+        self.convert_target_class: type[
+            VariableUnitaryGate | ConstantUnitaryGate
+        ]
+        self.conversion_operation: Callable[
+            [
+                Operation,
+            ], tuple[VariableUnitaryGate | ConstantUnitaryGate, RealVector],
+        ]
 
         if convert_target == 'variable':
-            self.convert_target = 'variable'
-            self.convert_variable = False
+            self.convert_target_class = VariableUnitaryGate
+            self.conversion_operation = self.convert_op_to_variable
+            if convert_constant:
+                self.convert_origin_class_list.append(ConstantUnitaryGate)
+
         elif convert_target == 'constant':
-            self.convert_target = 'constant'
-            self.convert_constant = False
+            self.convert_target_class = ConstantUnitaryGate
+            self.conversion_operation = self.convert_op_to_constant
+            if convert_variable:
+                self.convert_origin_class_list.append(VariableUnitaryGate)
         else:
             raise ValueError('Unexpected input for conversion target.')
+
+        if convert_circuitgates:
+            self.convert_origin_class_list.append(CircuitGate)
 
     async def run(self, circuit: Circuit, data: dict[str, Any] = {}) -> None:
         """Perform the pass's operation, see :class:`BasePass` for more."""
 
-        # Variable -> Constant
-        if self.convert_variable and self.convert_target == 'constant':
-            _logger.debug('Converting variable gates to constant gates.')
+        _logger.debug(
+            f'Converting {[o.__name__ for o in self.convert_origin_class_list]}\
+              to {self.convert_target_class.__name__}',
+        )
 
-            for cycle, op in circuit.operations_with_cycles():
-                if isinstance(op.gate, VariableUnitaryGate):
-                    cgate = ConstantUnitaryGate(op.get_unitary(), op.radixes)
-                    point = CircuitPoint(cycle, op.location[0])
-                    circuit.replace_gate(point, cgate, op.location)
+        for cycle, op in circuit.operations_with_cycles():
+            if isinstance(op.gate, tuple(self.convert_origin_class_list)):
+                new_gate, params = self.conversion_operation(op)
+                point = CircuitPoint(cycle, op.location[0])
+                circuit.replace_gate(point, new_gate, op.location, params)
 
-        # CircuitGates -> Constant
-        if self.convert_circuitgates and self.convert_target == 'constant':
-            _logger.debug('Converting circuit gates to constant gates.')
+    @staticmethod
+    def convert_op_to_constant(
+            op: Operation,
+    ) -> tuple[ConstantUnitaryGate, RealVector]:
 
-            for cycle, op in circuit.operations_with_cycles():
-                if isinstance(op.gate, CircuitGate):
-                    cgate = ConstantUnitaryGate(op.get_unitary(), op.radixes)
-                    point = CircuitPoint(cycle, op.location[0])
-                    circuit.replace_gate(point, cgate, op.location)
+        return ConstantUnitaryGate(op.get_unitary(), op.radixes), []
 
-        # Constant -> Variable
-        if self.convert_constant and self.convert_target == 'variable':
-            _logger.debug('Converting constant gates to variable gates.')
+    @staticmethod
+    def convert_op_to_variable(
+            op: Operation,
+    ) -> tuple[VariableUnitaryGate, RealVector]:
 
-            for cycle, op in circuit.operations_with_cycles():
-                if isinstance(op.gate, ConstantUnitaryGate):
-                    params = VariableUnitaryGate.get_params(op.get_unitary())
-                    vgate = VariableUnitaryGate(op.num_qudits, op.radixes)
-                    point = CircuitPoint(cycle, op.location[0])
-                    circuit.replace_gate(point, vgate, op.location, params)
+        params = VariableUnitaryGate.get_params(op.get_unitary())
+        vgate = VariableUnitaryGate(op.num_qudits, op.radixes)
 
-        # CircuitGates -> Variable
-        if self.convert_constant and self.convert_target == 'variable':
-            _logger.debug('Converting circuit gates to variable gates.')
-
-            for cycle, op in circuit.operations_with_cycles():
-                if isinstance(op.gate, CircuitGate):
-                    params = VariableUnitaryGate.get_params(op.get_unitary())
-                    vgate = VariableUnitaryGate(op.num_qudits, op.radixes)
-                    point = CircuitPoint(cycle, op.location[0])
-                    circuit.replace_gate(point, vgate, op.location, params)
+        return vgate, params
