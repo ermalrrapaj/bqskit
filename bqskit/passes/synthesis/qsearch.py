@@ -189,6 +189,9 @@ class QSearchSynthesisPass(SynthesisPass):
 
             # Generate successors
             successors = self.layer_gen.gen_successors(top_circuit, data)
+            
+            if len(successors) == 0:
+                continue
 
             # Instantiate successors
             circuits = await get_runtime().map(
