@@ -167,7 +167,7 @@ class QSearchSynthesisPass(SynthesisPass):
         instantiation_calls += 1
         if self.store_instantiation_calls:
             if 'instantiation_calls' not in data:
-                data['instantiation_calls'] = []
+                data['instantiation_calls'] = 0
 
         # Track best circuit, initially the initial layer
         best_dist = self.cost.calc_cost(initial_layer, utry)
@@ -185,7 +185,7 @@ class QSearchSynthesisPass(SynthesisPass):
                 'Successful synthesis with 1 call to instantiations',
             )
             if self.store_instantiation_calls:
-                data['instantiation_calls'].append(instantiation_calls)
+                data['instantiation_calls'] = instantiation_calls
             return initial_layer
 
         # Main loop
@@ -194,6 +194,9 @@ class QSearchSynthesisPass(SynthesisPass):
 
             # Generate successors
             successors = self.layer_gen.gen_successors(top_circuit, data)
+
+            if len(successors) == 0:
+                continue
 
             # Instantiate successors
             circuits = await get_runtime().map(
@@ -216,7 +219,7 @@ class QSearchSynthesisPass(SynthesisPass):
                     if self.store_partial_solutions:
                         data['psols'] = psols
                     if self.store_instantiation_calls:
-                        data['instantiation_calls'].append(instantiation_calls)
+                        data['instantiation_calls'] = instantiation_calls
                     return circuit
 
                 if dist < best_dist:
@@ -249,6 +252,6 @@ class QSearchSynthesisPass(SynthesisPass):
         if self.store_partial_solutions:
             data['psols'] = psols
         if self.store_instantiation_calls:
-            data['instantiation_calls'].append(instantiation_calls)
+            data['instantiation_calls'] = instantiation_calls
 
         return best_circ
