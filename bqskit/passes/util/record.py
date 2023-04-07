@@ -17,7 +17,6 @@ class RecordStatsPass(BasePass):
 
     The RecordStatsPass stores stats about the circuit.
     """
-
     key = 'RecordStatsPass_stats_list'
 
     async def run(self, circuit: Circuit, data: PassData) -> None:
@@ -31,6 +30,9 @@ class RecordStatsPass(BasePass):
             gate: circuit.count(gate)
             for gate in circuit.gate_set
         }
+        if 'instantiation_calls' in data:
+            inst_calls = data['instantiation_calls']
+            stats['instantiation_calls'] = inst_calls
 
         if self.key not in data:
             data[self.key] = []
@@ -43,3 +45,5 @@ class RecordStatsPass(BasePass):
         _logger.info(f'{circuit.coupling_graph} Connectivity')
         for gate in circuit.gate_set:
             _logger.info(f'{circuit.count(gate)} {gate.name} Count')
+        if 'instantiation_calls' in data:
+            _logger.info(f'{inst_calls} Instantiation Calls')

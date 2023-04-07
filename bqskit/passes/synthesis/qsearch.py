@@ -157,12 +157,7 @@ class QSearchSynthesisPass(SynthesisPass):
         instantiation_calls = 0
         # Seed the search with an initial layer
         initial_layer = self.layer_gen.gen_initial_layer(utry, data)
-        initial_layer = await get_runtime().submit(
-            Circuit.instantiate,
-            initial_layer,
-            target=utry,
-            **instantiate_options,
-        )
+        initial_layer.instantiate(utry, **instantiate_options)
         frontier.add(initial_layer, 0)
         instantiation_calls += 1
         if self.store_instantiation_calls:
@@ -194,6 +189,9 @@ class QSearchSynthesisPass(SynthesisPass):
 
             # Generate successors
             successors = self.layer_gen.gen_successors(top_circuit, data)
+            
+            if len(successors) == 0:
+                continue
 
             if len(successors) == 0:
                 continue
