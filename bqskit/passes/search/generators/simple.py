@@ -168,6 +168,9 @@ class SimpleLayerGenerator(LayerGenerator):
         init_circuit = Circuit(target.num_qudits, target.radixes)
         for i in range(init_circuit.num_qudits):
             init_circuit.append_gate(self.initial_layer_gate, [i])
+
+        data['seed_seen_before'] = {self.hash_structure(init_circuit)}
+
         return init_circuit
 
     def gen_successors(self, circuit: Circuit, data: PassData) -> list[Circuit]:
@@ -187,13 +190,62 @@ class SimpleLayerGenerator(LayerGenerator):
         # Get the coupling graph
         coupling_graph = data.connectivity
 
+        ignorable_edges = self.edges_to_ignore(circuit, coupling_graph)
         # Generate successors
         successors = []
-        for edge in coupling_graph:
+        for (a,b) in coupling_graph:
+            # Check if we can skip a successor
+            if (a,b) in ignorable_edges:
+                continue
+            
             successor = circuit.copy()
-            successor.append_gate(self.two_qudit_gate, [edge[0], edge[1]])
-            successor.append_gate(self.single_qudit_gate_1, edge[0])
-            successor.append_gate(self.single_qudit_gate_2, edge[1])
-            successors.append(successor)
+            successor.append_gate(self.two_qudit_gate, [a, b])
+            successor.append_gate(self.single_qudit_gate_1, a)
+            successor.append_gate(self.single_qudit_gate_2, b)
+
+            h = self.hash_structure(successor)
+            if h not in data['seed_seen_before']:
+                data['seed_seen_before'].add(h)
+                successors.append(successor)
 
         return successors
+    
+    def edges_to_ignore(self, circuit : Circuit, coupling_graph) -> set[tuple[int]]:
+
+        limit = 3 # Assumes CNOTs are used 
+        ignore_edges : set[tuple[int]] = set()
+        counts = {edge: 0 for edge in coupling_graph}
+
+        for op in reversed(circuit):    
+            if op.num_qudits < 2:
+                continue
+
+            if len(counts) == 0:
+                break
+
+            a,b = op.location
+
+            if (a,b) in counts:
+                counts[(a,b)] += 1
+                if counts[(a,b)] >= limit:
+                    ignore_edges.add((a,b))
+                    counts.pop((a,b))
+            
+            to_pop = []
+            for (x,y) in counts:
+                if (x,y) == (a,b) or (x,y) == (b,a):
+                    continue
+                if a == x or a == y or b == x or b == y:
+                    to_pop += [(x,y)]
+            for (x,y) in to_pop:
+                counts.pop((x,y))
+        return ignore_edges
+
+    @staticmethod
+    def hash_structure(circuit: Circuit) -> int:
+        hashes = []
+        for cycle, op in circuit.operations_with_cycles():
+            hashes.append(hash((cycle, str(op))))
+            if len(hashes) > 100:
+                hashes = [sum(hashes)]
+        return sum(hashes)

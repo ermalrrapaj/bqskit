@@ -193,9 +193,6 @@ class QSearchSynthesisPass(SynthesisPass):
             if len(successors) == 0:
                 continue
 
-            if len(successors) == 0:
-                continue
-
             # Instantiate successors
             circuits = await get_runtime().map(
                 Circuit.instantiate,
@@ -205,9 +202,17 @@ class QSearchSynthesisPass(SynthesisPass):
             )
             instantiation_calls += 1
 
+            _logger.debug(f'Evaluated {len(circuits)} successors')
             # Evaluate successors
-            for circuit in circuits:
+            for i,circuit in enumerate(circuits):
                 dist = self.cost.calc_cost(circuit, utry)
+
+                print(f'successor {i} : {dist}')
+                to_print = []
+                for op in circuit:
+                    if op.num_qudits > 1:
+                        to_print.append(op.location)
+                print(to_print)
 
                 if dist < self.success_threshold:
                     _logger.debug(
