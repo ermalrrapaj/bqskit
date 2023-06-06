@@ -11,8 +11,9 @@ class PassPredicate(abc.ABC):
     """
     The PassPredicate abstract base class.
 
-    A PassPredicate implements the :func:`get_truth_value` method, which is
-    called from control passes to determine the flow of execution.
+    A PassPredicate implements the
+    :func: `get_truth_value` method, which is     called from control passes to
+        determine the flow of execution.
     """
 
     @abc.abstractmethod

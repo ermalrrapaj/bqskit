@@ -1,6 +1,6 @@
 """
-=======================================================
-Quantum Information Science Library (:mod:`bqskit.qis`)
+======================================================= Quantum Information
+Science Library (:mod:`bqskit.qis`)
 =======================================================
 
 .. currentmodule:: bqskit.qis

@@ -15,7 +15,8 @@ class GeneralizedSabreLayoutPass(BasePass, GeneralizedSabreAlgorithm):
     """
     Uses the Sabre algorithm to layout the circuit.
 
-    See :class:`GeneralizedSabreAlgorithm` for more info.
+    See
+    :class: `GeneralizedSabreAlgorithm` for more info.
     """
 
     def __init__(

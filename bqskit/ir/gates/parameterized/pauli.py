@@ -70,7 +70,8 @@ class PauliGate(QubitGate, DifferentiableUnitary, LocallyOptimizableUnitary):
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
 
@@ -85,7 +86,8 @@ class PauliGate(QubitGate, DifferentiableUnitary, LocallyOptimizableUnitary):
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
 
@@ -97,7 +99,8 @@ class PauliGate(QubitGate, DifferentiableUnitary, LocallyOptimizableUnitary):
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         self.check_env_matrix(env_matrix)
         U, _, Vh = sp.linalg.svd(env_matrix)

@@ -25,7 +25,8 @@ class PermutationMatrix(UnitaryMatrix):
         """
         Constructs a `PermutationMatrix` from the supplied matrix.
 
-        See :class:`UnitaryMatrix` for more info.
+        See
+        :class: `UnitaryMatrix` for more info.
         """
         if check_arguments and not PermutationMatrix.is_permutation(input):
             raise ValueError('Input failed permutation condition.')
@@ -40,7 +41,8 @@ class PermutationMatrix(UnitaryMatrix):
         """
         Creates a qubit permutation matrix.
 
-        See :func:`from_qudit_location` for more info.
+        See
+        :func: `from_qudit_location` for more info.
         """
         return PermutationMatrix.from_qudit_location(num_qubits, 2, location)
 

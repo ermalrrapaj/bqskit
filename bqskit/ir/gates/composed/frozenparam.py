@@ -97,7 +97,8 @@ class FrozenParameterGate(
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         grads = self.gate.get_grad(self.get_full_params(params))  # type: ignore
         return grads[self.unfixed_param_idxs, :, :]
@@ -109,7 +110,8 @@ class FrozenParameterGate(
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         f_params = self.get_full_params(params)
 
@@ -120,7 +122,8 @@ class FrozenParameterGate(
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         params = self.gate.optimize(env_matrix)  # type: ignore
         return [

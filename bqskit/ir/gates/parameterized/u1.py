@@ -52,7 +52,8 @@ class U1Gate(
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
 
@@ -71,7 +72,8 @@ class U1Gate(
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         self.check_env_matrix(env_matrix)
         a = np.real(env_matrix[1, 1])

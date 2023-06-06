@@ -17,7 +17,8 @@ class GeneralizedSabreRoutingPass(BasePass, GeneralizedSabreAlgorithm):
     """
     Uses the Sabre algorithm to route the circuit.
 
-    See :class:`GeneralizedSabreAlgorithm` for more info.
+    See
+    :class: `GeneralizedSabreAlgorithm` for more info.
     """
 
     def run(self, circuit: Circuit, data: dict[str, Any] = {}) -> None:

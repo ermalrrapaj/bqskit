@@ -61,7 +61,8 @@ class TaggedGate(
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if hasattr(self, 'utry'):
             return np.array([])
@@ -75,7 +76,8 @@ class TaggedGate(
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if hasattr(self, 'utry'):
             return self.utry, np.array([])
@@ -86,7 +88,8 @@ class TaggedGate(
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         if hasattr(self, 'utry'):
             return []

@@ -69,7 +69,8 @@ class VariableUnitaryGate(
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         self.check_env_matrix(env_matrix)
         U, _, Vh = sp.linalg.svd(env_matrix)

@@ -24,9 +24,9 @@ class UnitaryBuilder(Unitary):
     An object for fast unitary accumulation using tensor networks.
 
     A UnitaryBuilder is similar to a StringBuilder in the sense that it is an
-    efficient way to string together or accumulate :class:`Unitary` objects.
-    This class uses concepts from tensor networks to efficiently multiply
-    unitary matrices.
+    efficient way to string together or accumulate
+    :class: `Unitary` objects.     This class uses concepts from tensor networks
+        to efficiently multiply     unitary matrices.
     """
 
     def __init__(self, num_qudits: int, radixes: Sequence[int] = []) -> None:
@@ -258,7 +258,8 @@ class UnitaryBuilder(Unitary):
         """
         Evaluate the application of `M` on the right of this UnitaryBuilder.
 
-        See :func:`apply_right` for more info.
+        See
+        :func: `apply_right` for more info.
         """
         left_perm = list(cast(CircuitLocation, location))
         mid_perm = [x for x in range(self.num_qudits) if x not in left_perm]
@@ -288,7 +289,8 @@ class UnitaryBuilder(Unitary):
         """
         Evaluate the application of `M` on the left of this UnitaryBuilder.
 
-        See :func:`apply_left` for more info.
+        See
+        :func: `apply_left` for more info.
         """
         location = cast(CircuitLocation, location)
         left_perm = list(range(self.num_qudits))

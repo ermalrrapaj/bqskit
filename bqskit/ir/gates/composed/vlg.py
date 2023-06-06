@@ -151,7 +151,8 @@ class VariableLocationGate(ComposedGate):
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         return self.get_unitary_and_grad(params)[1]
 
@@ -162,7 +163,8 @@ class VariableLocationGate(ComposedGate):
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
         a, l = self.split_params(params)
@@ -189,7 +191,8 @@ class VariableLocationGate(ComposedGate):
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         raise NotImplementedError()
 

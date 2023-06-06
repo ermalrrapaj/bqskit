@@ -16,7 +16,8 @@ class LocallyOptimizableUnitary(Unitary):
 
     A locally optimizable unitary-valued function is one that can be optimized
     with respect to a fixed environment. A `LocallyOptimizableUnitary` inherits
-    from `Unitary` and additionally exposes the :func:`optimize` abstract
+    from `Unitary` and additionally exposes the
+    :func: `optimize` abstract
     method.
     """
 

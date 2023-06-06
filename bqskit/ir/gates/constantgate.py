@@ -32,7 +32,8 @@ class ConstantGate(
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
         return np.array([])
@@ -44,7 +45,8 @@ class ConstantGate(
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
         return getattr(self, '_utry'), np.array([])
@@ -53,6 +55,7 @@ class ConstantGate(
         """
         Return the optimal parameters with respect to an environment matrix.
 
-        See :class:`LocallyOptimizableUnitary` for more info.
+        See
+        :class: `LocallyOptimizableUnitary` for more info.
         """
         return []

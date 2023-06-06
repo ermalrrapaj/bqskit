@@ -55,7 +55,8 @@ class U3Gate(QubitGate, DifferentiableUnitary, CachedClass):
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         self.check_parameters(params)
 

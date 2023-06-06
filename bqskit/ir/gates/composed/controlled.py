@@ -88,7 +88,8 @@ class ControlledGate(
         """
         Return the gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if hasattr(self, 'utry'):
             return np.array([])
@@ -104,7 +105,8 @@ class ControlledGate(
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if hasattr(self, 'utry'):
             return self.utry, np.array([])

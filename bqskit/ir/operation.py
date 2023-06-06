@@ -111,7 +111,8 @@ class Operation(DifferentiableUnitary):
         """
         Return the gradient for this operation.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if len(params) != 0:
             return self.gate.get_grad(params)  # type: ignore
@@ -125,7 +126,8 @@ class Operation(DifferentiableUnitary):
         """
         Return the unitary and gradient for this gate.
 
-        See :class:`DifferentiableUnitary` for more info.
+        See
+        :class: `DifferentiableUnitary` for more info.
         """
         if len(params) != 0:
             return self.gate.get_unitary_and_grad(params)  # type: ignore
